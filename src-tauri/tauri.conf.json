@@ -7,12 +7,15 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "clip-cutter",
-    "version": "0.0.0"
+    "productName": "Clip cutter",
+    "version": "0.1.0"
   },
   "tauri": {
     "allowlist": {
       "all": false,
+      "dialog": {
+        "open": true
+      },
       "shell": {
         "all": false,
         "open": true
@@ -59,11 +62,12 @@
     },
     "windows": [
       {
-        "fullscreen": false,
-        "height": 600,
-        "resizable": true,
         "title": "clip-cutter",
-        "width": 800
+        "width": 800,
+        "height": 550,
+        "fullscreen": false,
+        "resizable": false,
+        "center": true
       }
     ]
   }
