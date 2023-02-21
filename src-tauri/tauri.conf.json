@@ -7,7 +7,7 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "Clip cutter",
+    "productName": "clip-cutter",
     "version": "0.1.0"
   },
   "tauri": {
@@ -17,8 +17,37 @@
         "open": true
       },
       "shell": {
-        "all": false,
-        "open": true
+        "all": true,
+        "scope": [
+          {
+            "name": "run-ffmpeg",
+            "cmd": "ffmpeg",
+            "args": [
+              "-i",
+              {
+                "validator": ".*"
+              },
+              "-vcodec",
+              "libx264",
+              "-crf",
+              "24",
+              "-ss",
+              {
+                "validator": ".*"
+              },
+              "-to",
+              {
+                "validator": ".*"
+              },
+              {
+                "validator": ".*"
+              }
+            ]
+          }
+        ]
+      },
+      "path": {
+        "all": true
       }
     },
     "bundle": {
@@ -62,7 +91,7 @@
     },
     "windows": [
       {
-        "title": "clip-cutter",
+        "title": "Clip Cutter",
         "width": 800,
         "height": 550,
         "fullscreen": false,

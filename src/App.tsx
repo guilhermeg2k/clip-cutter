@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
+import { Command } from "@tauri-apps/api/shell";
 import { open } from "@tauri-apps/api/dialog";
+import { path, shell } from "@tauri-apps/api";
+
+const VIDEO_EXTENSIONS = ["mp4", "mkv", "avi", "mov", "webm"];
 
 const Label = ({
   htmlFor,
@@ -34,6 +38,44 @@ const Input = ({
   );
 };
 
+const cutFile = async (
+  filePath: string,
+  outputFileName: string,
+  startTime: string,
+  endTime: string
+) => {
+  const outputFilePath = await path.join(
+    await path.dirname(filePath),
+    `${outputFileName}.mp4`
+  );
+
+  const cutCommandShell = new Command("run-ffmpeg", [
+    "-i",
+    filePath,
+    "-vcodec",
+    "libx264",
+    "-crf",
+    "24",
+    "-ss",
+    startTime,
+    "-to",
+    endTime,
+    outputFilePath,
+  ]);
+
+  cutCommandShell.on("error", (error) =>
+    console.error(`command error: "${error}"`)
+  );
+  cutCommandShell.stdout.on("data", (line) =>
+    console.log(`command stdout: "${line}"`)
+  );
+  cutCommandShell.stderr.on("data", (line) =>
+    console.log(`command stderr: "${line}"`)
+  );
+
+  await cutCommandShell.execute();
+};
+
 const App = () => {
   const [file, setFile] = useState<string | null>(null);
   const [outputFileName, setOutputFileName] = useState("output.mp4");
@@ -46,8 +88,8 @@ const App = () => {
       multiple: false,
       filters: [
         {
-          name: "Video files",
-          extensions: ["mp4", "mkv", "avi", "mov", "webm"],
+          name: "Mp4, mkv, avi, mov, webm",
+          extensions: VIDEO_EXTENSIONS,
         },
       ],
     });
@@ -91,7 +133,7 @@ const App = () => {
             <Input
               type="text"
               placeholder="My Clip"
-              onChange={(event) => setStartTime(event.target.value)}
+              onChange={(event) => setOutputFileName(event.target.value)}
             />
           </Label>
           <div className="flex gap-1 items-center">
@@ -107,6 +149,7 @@ const App = () => {
           <button
             type="button"
             className="p-4 bg bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-500 text-white font-semibold uppercase w-full rounded-md duration-200 ease-in-out"
+            onClick={() => cutFile(file!, outputFileName, startTime, endTime)}
           >
             Cut!
           </button>
