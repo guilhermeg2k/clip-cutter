@@ -20,7 +20,7 @@
         "all": true,
         "scope": [
           {
-            "name": "run-ffmpeg",
+            "name": "ffmpeg",
             "cmd": "ffmpeg",
             "args": [
               "-i",
@@ -39,6 +39,29 @@
               {
                 "validator": ".*"
               },
+              {
+                "validator": ".*"
+              }
+            ]
+          },
+          {
+            "name": "ffmpeg-full-quality",
+            "cmd": "ffmpeg",
+            "args": [
+              "-i",
+              {
+                "validator": ".*"
+              },
+              "-ss",
+              {
+                "validator": ".*"
+              },
+              "-to",
+              {
+                "validator": ".*"
+              },
+              "-c",
+              "copy",
               {
                 "validator": ".*"
               }
